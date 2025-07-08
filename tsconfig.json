@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",           // ✅ Importante para soportar JSX moderno
+    "lib": ["DOM", "ESNext"],     // ✅ Necesario para JSX en el navegador
+    "module": "ESNext",
+    "target": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true
+  },
+  "include": ["src"]
+}
