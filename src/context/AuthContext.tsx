@@ -1,34 +1,35 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
-interface Usuario {
+interface User {
   id: number;
-  nombre: string;
+  name: string;
   email: string;
   // agrega más campos según tu API
 }
 
 interface AuthContextType {
-  usuario: Usuario | null;
+  user: User | null;
   token: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
+  isAuthenticated: boolean; // 👈 nueva propiedad
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [usuario, setUsuario] = useState<Usuario | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('usuario');
+    const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
     if (storedUser && storedToken) {
       try {
-        setUsuario(JSON.parse(storedUser));
+        setUser(JSON.parse(storedUser));
         setToken(storedToken);
       } catch (error) {
         console.error("Error al parsear el usuario desde localStorage", error);
@@ -39,15 +40,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('http://localhost:8000/api/login', {
+      const res = await axios.post('http://127.0.0.1:8000/api/login', {
         email,
         password
       });
 
-      const { usuario, token } = res.data;
-      setUsuario(usuario);
+      const { user, token } = res.data;
+      setUser(user);
       setToken(token);
-      localStorage.setItem('usuario', JSON.stringify(usuario));
+      localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', token);
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
@@ -56,14 +57,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    setUsuario(null);
+    setUser(null);
     setToken(null);
-    localStorage.removeItem('usuario');
+    localStorage.removeItem('user');
     localStorage.removeItem('token');
   };
 
+  const isAuthenticated = !!user && !!token;
+
   return (
-    <AuthContext.Provider value={{ usuario, token, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading, isAuthenticated  }}>
       {children}
     </AuthContext.Provider>
   );
@@ -76,3 +79,4 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
+

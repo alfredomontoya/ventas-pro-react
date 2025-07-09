@@ -11,7 +11,7 @@ const LoginPage: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await login(email, password);
+      const res = await login(email, password);
       navigate('/');
     } catch (error) {
       alert('Credenciales incorrectas');

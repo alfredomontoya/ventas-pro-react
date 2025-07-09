@@ -4,11 +4,14 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
-const Topbar: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+interface TopbarProps {
+  setIsMobileOpen: () => void;
+}
+
+const Topbar: React.FC<TopbarProps> = ({ setIsMobileOpen }) => {
+  const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
   const handleLogout = () => {
     logout();
     navigate('/login');
@@ -17,7 +20,10 @@ const Topbar: React.FC = () => {
   return (
     <header className="h-16 bg-white shadow px-4 sm:px-6 flex items-center justify-between w-full z-40">
       <div className="flex items-center gap-3">
-        <Menu className="h-6 w-6 text-gray-600" />
+         <button onClick={setIsMobileOpen} className="md:hidden">
+          <Menu className="h-6 w-6 text-gray-600" />
+        </button>
+        
         <span className="text-lg font-semibold text-gray-800">VentasPro</span>
       </div>
 
@@ -27,7 +33,7 @@ const Topbar: React.FC = () => {
             onClick={() => setOpen(!open)}
             className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded"
           >
-            <span className="text-gray-800 text-sm">Usuario</span>
+            <span className="text-gray-800 text-sm">{user?.name}</span>
             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
               <path
                 fillRule="evenodd"
