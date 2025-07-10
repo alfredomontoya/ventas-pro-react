@@ -3,7 +3,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 import VentasPage from '../pages/Ventas';
-import ClientesPage from '../pages/Clientes';
+import ClientesPage from '../pages/ClientesPage';
 import ProductosPage from '../pages/Productos';
 import LoginPage from '../pages/Login/Login';
 
