@@ -1,5 +1,6 @@
 // src/components/cliente/ClientesSearch.tsx
 import React from 'react';
+import Input from '../Input';
 
 interface ClientesSearchProps {
   onSearch: (term: string) => void;
@@ -7,12 +8,7 @@ interface ClientesSearchProps {
 
 const ClientesSearch: React.FC<ClientesSearchProps> = ({ onSearch }) => {
   return (
-    <input
-      type="text"
-      className="border p-2 rounded w-full mb-4"
-      placeholder="Buscar cliente..."
-      onChange={(e) => onSearch(e.target.value)}
-    />
+    <Input placeholder="Buscar cliente..." type='email'/>
   );
 };
 

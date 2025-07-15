@@ -26,9 +26,6 @@ export const useClientes = () => {
       },
     });
     const paginated: PaginatedClientes = res.data.data;
-    console.log('paginated')
-    console.log(paginated)
-
 
     setClientes(paginated.data);
     setCurrentPage(paginated.current_page);
@@ -40,6 +37,16 @@ export const useClientes = () => {
     fetchClientes();
   }, []);
 
+  const guardarCliente = async (cliente: Partial<Cliente>) => {
+    try {
+      const res = await axios.post('http://127.0.0.1:8000/api/clientes', cliente);
+      return { success: true, data: res.data };
+    } catch (error: any) {
+      console.error('Error al guardar cliente:', error);
+      return { success: false, error };
+    }
+  };
+
   return {
     clientes,
     loading,
@@ -48,5 +55,6 @@ export const useClientes = () => {
     searchTerm,
     setSearchTerm,
     fetchClientes,
+    guardarCliente
   };
 };

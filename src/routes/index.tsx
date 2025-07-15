@@ -4,6 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 import VentasPage from '../pages/Ventas';
 import ClientesPage from '../pages/ClientesPage';
+import ClienteCreatePage from '../pages/ClienteCreatePage';
 import ProductosPage from '../pages/Productos';
 import LoginPage from '../pages/Login/Login';
 
@@ -15,6 +16,7 @@ const AppRoutes = () => {
         <Route index element={<div>Bienvenido al Dashboard</div>} />
         <Route path="ventas" element={<VentasPage />} />
         <Route path="clientes" element={<ClientesPage />} />
+        <Route path="clientes/nuevo" element={<ClienteCreatePage />} />
         <Route path="productos" element={<ProductosPage />} />
         {/* Agrega más rutas hijas aquí según necesites */}
       </Route>

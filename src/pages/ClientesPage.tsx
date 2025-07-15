@@ -6,12 +6,15 @@ import ClienteDetails from '../components/cliente/ClienteDetails';
 import ClientesSearch from '../components/cliente/ClientesSearch';
 import ClientesPagination from '../components/cliente/ClientesPagination';
 import { Cliente } from '../types/cliente';
+import { useNavigate } from 'react-router-dom';
 
 const ClientesPage: React.FC = () => {
+  const navigate = useNavigate();
   const {
     clientes,
     currentPage,
     lastPage,
+    loading,
     fetchClientes,
     setSearchTerm,
     searchTerm
@@ -22,26 +25,50 @@ const ClientesPage: React.FC = () => {
   // Ejecutar búsqueda cada vez que cambia el término
   useEffect(() => {
     fetchClientes(1, searchTerm);
+    // console.log(selected)
   }, [searchTerm]);
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Clientes</h1>
-        <button className="bg-green-600 text-white px-4 py-2 rounded">Nuevo</button>
+        <button className="bg-green-600 text-white px-4 py-2 rounded" onClick={() => navigate('/clientes/nuevo')}
+>
+  Nuevo
+</button>
       </div>
 
       <ClientesSearch onSearch={setSearchTerm} />
 
-      <ClientesTable clientes={clientes} onSelect={setSelected} />
+      {loading ? (
+          <p>Cargando...</p>
+        ) : (
+          <>
+            
 
-      {selected && <ClienteDetails cliente={selected} />}
+            {selected ? (
+              <>
+                <button
+                  onClick={() => setSelected(null)}
+                  className="mb-2 px-4 py-1 bg-gray-300 rounded"
+                >
+                  Volver al listado
+                </button>
+                <ClienteDetails cliente={selected} />
+              </>
+            ) : (
+              <>
+                <ClientesTable clientes={clientes} onSelect={setSelected} />
+                <ClientesPagination
+                  currentPage={currentPage}
+                  totalPages={lastPage}
+                  onPageChange={(page) => fetchClientes(page, searchTerm)}
+                />
+              </>
+            )}
 
-      <ClientesPagination
-        currentPage={currentPage}
-        totalPages={lastPage}
-        onPageChange={(page) => fetchClientes(page, searchTerm)}
-      />
+          </>
+      )}
     </div>
   );
 };
