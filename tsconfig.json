@@ -5,6 +5,7 @@
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "Bundler",
+    "types": ["react", "react-dom"],
     "strict": true,
     "noEmit": true
   },

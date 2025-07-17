@@ -1,6 +1,7 @@
 // src/hooks/useClientes.ts
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import apiClient from '../api/apiClient';
+
 import { Cliente } from '../types/cliente';
 
 interface PaginatedClientes {
@@ -19,12 +20,9 @@ export const useClientes = () => {
 
   const fetchClientes = async (page = 1, search = '') => {
     setLoading(true);
-    const res = await axios.get('http://127.0.0.1:8000/api/clientes', {
-      params: {
-        page,
-        search,
-      },
-    });
+    const res = await apiClient.get('/clientes', {
+        params: { page, search },
+      });
     const paginated: PaginatedClientes = res.data.data;
 
     setClientes(paginated.data);
@@ -39,9 +37,9 @@ export const useClientes = () => {
 
   const guardarCliente = async (cliente: Partial<Cliente>) => {
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/clientes', cliente);
+      const res = await apiClient.post('/clientes', cliente);
       return { success: true, data: res.data };
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error al guardar cliente:', error);
       return { success: false, error };
     }

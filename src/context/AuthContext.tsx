@@ -1,5 +1,6 @@
+// src/context/AuthContext.tsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import apiClient from '../api/apiClient'; // 👈 usa tu instancia personalizada
 
 interface User {
   id: number;
@@ -14,7 +15,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   loading: boolean;
-  isAuthenticated: boolean; // 👈 nueva propiedad
+  isAuthenticated: boolean;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         setUser(JSON.parse(storedUser));
         setToken(storedToken);
+        apiClient.defaults.headers.common.Authorization = `Bearer ${storedToken}`; // 👈 token en headers
       } catch (error) {
         console.error("Error al parsear el usuario desde localStorage", error);
       }
@@ -40,19 +42,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/login', {
-        email,
-        password
-      });
-
+      const res = await apiClient.post('/login', { email, password });
       const { user, token } = res.data;
+
       setUser(user);
       setToken(token);
       localStorage.setItem('user', JSON.stringify(user));
       localStorage.setItem('token', token);
+
+      apiClient.defaults.headers.common.Authorization = `Bearer ${token}`; // 👈 token en headers
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
-      throw error; // para que el componente que llama pueda manejarlo
+      throw error;
     }
   };
 
@@ -61,12 +62,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToken(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    delete apiClient.defaults.headers.common.Authorization; // 👈 elimina el token de headers
   };
 
   const isAuthenticated = !!user && !!token;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading, isAuthenticated  }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
@@ -79,4 +81,3 @@ export const useAuth = (): AuthContextType => {
   }
   return context;
 };
-
