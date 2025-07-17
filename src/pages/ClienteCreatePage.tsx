@@ -3,6 +3,7 @@ import React from 'react';
 import ClienteForm from '../components/cliente/ClienteForm';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { Toaster } from 'react-hot-toast';
 
 const ClienteCreatePage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const ClienteCreatePage: React.FC = () => {
 
   return (
     <div className="max-w-xl mx-auto mt-6">
+      <Toaster position="top-right" />
       <h1 className="text-2xl font-bold mb-4">Registrar Cliente</h1>
       <ClienteForm onSubmit={handleSubmit} />
     </div>

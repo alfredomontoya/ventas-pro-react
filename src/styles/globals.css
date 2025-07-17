@@ -1,0 +1,37 @@
+/* src/styles/globals.css */
+:root {
+  --color-primary: #2563eb; /* azul por defecto */
+  --color-secondary: #6b7280;
+  --color-danger: #dc2626;
+  --color-warning: #facc15;
+  --color-success: #16a34a;
+  --color-white: #ffffff;
+  --color-dark: #1f2937;
+}
+
+/* Temas */
+.theme-green {
+  --color-primary: #22c55e;
+}
+
+.theme-purple {
+  --color-primary: #8b5cf6;
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 text-white font-semibold rounded shadow-md transition duration-200;
+    background-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.1);
+  }
+
+  .btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-primary);
+  }
+
+  /* Puedes agregar más clases personalizadas aquí */
+}
